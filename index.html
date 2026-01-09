@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터베이스 ERD 학습 도구</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='12' cy='5' rx='9' ry='3'></ellipse><path d='M21 12c0 1.66-4 3-9 3s-9-1.34-9-3'></path><path d='M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5'></path></svg>" />
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-database"></i> 데이터베이스 ERD 학습 도구</h1>
+            <p class="subtitle">관계형 데이터베이스 스키마 설계 및 ERD 다이어그램 학습</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 탭 네비게이션 -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="erd">
+                <i class="fas fa-project-diagram"></i> ERD 다이어그램
+            </button>
+            <button class="tab-button" data-tab="schema">
+                <i class="fas fa-table"></i> 테이블 스키마
+            </button>
+            <button class="tab-button" data-tab="data">
+                <i class="fas fa-database"></i> 샘플 데이터
+            </button>
+            <button class="tab-button" data-tab="relations">
+                <i class="fas fa-link"></i> 관계 설명
+            </button>
+        </div>
+
+        <!-- ERD 다이어그램 탭 -->
+        <div class="tab-content active" id="erd-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-project-diagram"></i> Entity-Relationship Diagram</h2>
+                <p>4개의 엔티티와 그들의 관계를 시각화한 ERD입니다.</p>
+            </div>
+
+            <div class="erd-container">
+                <svg id="erd-diagram" viewBox="0 0 1200 800"></svg>
+            </div>
+
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> ERD 표기법 설명</h3>
+                <div class="notation-grid">
+                    <div class="notation-item">
+                        <div class="notation-icon pk">PK</div>
+                        <div>
+                            <strong>Primary Key (기본키)</strong>
+                            <p>테이블의 각 행을 고유하게 식별하는 컬럼</p>
+                        </div>
+                    </div>
+                    <div class="notation-item">
+                        <div class="notation-icon fk">FK</div>
+                        <div>
+                            <strong>Foreign Key (외래키)</strong>
+                            <p>다른 테이블의 기본키를 참조하는 컬럼</p>
+                        </div>
+                    </div>
+                    <div class="notation-item">
+                        <div class="notation-icon">1</div>
+                        <div>
+                            <strong>One (일대)</strong>
+                            <p>하나의 레코드와 연결</p>
+                        </div>
+                    </div>
+                    <div class="notation-item">
+                        <div class="notation-icon">N</div>
+                        <div>
+                            <strong>Many (다대)</strong>
+                            <p>여러 개의 레코드와 연결</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 테이블 스키마 탭 -->
+        <div class="tab-content" id="schema-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-table"></i> 테이블 스키마</h2>
+                <p>각 테이블의 상세 구조를 확인할 수 있습니다.</p>
+            </div>
+
+            <div id="schema-container"></div>
+        </div>
+
+        <!-- 샘플 데이터 탭 -->
+        <div class="tab-content" id="data-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-database"></i> 샘플 데이터</h2>
+                <p>각 테이블에 저장된 실제 데이터를 확인할 수 있습니다.</p>
+            </div>
+
+            <div id="data-container"></div>
+        </div>
+
+        <!-- 관계 설명 탭 -->
+        <div class="tab-content" id="relations-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-link"></i> 테이블 간 관계</h2>
+                <p>엔티티 간의 관계와 카디널리티를 상세히 설명합니다.</p>
+            </div>
+
+            <div class="relations-grid">
+                <div class="relation-card">
+                    <div class="relation-header">
+                        <h3>교수 → 과목</h3>
+                        <span class="relation-badge one-to-many">1:N (일대다)</span>
+                    </div>
+                    <div class="relation-body">
+                        <div class="relation-diagram">
+                            <div class="entity">교수 (professors)</div>
+                            <div class="relation-line">
+                                <span class="cardinality">1</span>
+                                <div class="line"></div>
+                                <span class="cardinality">N</span>
+                            </div>
+                            <div class="entity">과목 (courses)</div>
+                        </div>
+                        <p class="relation-desc">
+                            <strong>의미:</strong> 한 명의 교수는 여러 과목을 강의할 수 있습니다.<br>
+                            <strong>구현:</strong> <code>courses.professor_id</code>가 <code>professors.id</code>를 참조
+                            (Foreign Key)
+                        </p>
+                        <div class="example">
+                            <strong>예시:</strong> 김철수 교수님은 "데이터베이스 설계"와 "알고리즘" 2개 과목을 강의합니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relation-card">
+                    <div class="relation-header">
+                        <h3>학생 ↔ 과목</h3>
+                        <span class="relation-badge many-to-many">N:M (다대다)</span>
+                    </div>
+                    <div class="relation-body">
+                        <div class="relation-diagram triple">
+                            <div class="entity">학생 (students)</div>
+                            <div class="relation-line">
+                                <span class="cardinality">N</span>
+                                <div class="line"></div>
+                                <span class="cardinality">1</span>
+                            </div>
+                            <div class="entity junction">수강신청내역 (enrollments)</div>
+                            <div class="relation-line">
+                                <span class="cardinality">1</span>
+                                <div class="line"></div>
+                                <span class="cardinality">M</span>
+                            </div>
+                            <div class="entity">과목 (courses)</div>
+                        </div>
+                        <p class="relation-desc">
+                            <strong>의미:</strong> 한 학생은 여러 과목을 수강할 수 있고, 한 과목에는 여러 학생이 수강할 수 있습니다.<br>
+                            <strong>구현:</strong> 중간 테이블 <code>enrollments</code>를 통해 다대다 관계를 구현<br>
+                            - <code>enrollments.student_id</code> → <code>students.id</code> (Foreign Key)<br>
+                            - <code>enrollments.course_id</code> → <code>courses.id</code> (Foreign Key)
+                        </p>
+                        <div class="example">
+                            <strong>예시:</strong> 홍길동 학생은 "데이터베이스 설계", "알고리즘", "인공지능 기초" 3개 과목을 수강하고,
+                            "데이터베이스 설계" 과목에는 홍길동, 김민지, 정다은 3명의 학생이 수강합니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relation-card">
+                    <div class="relation-header">
+                        <h3>교수 ⇢ 학생 (간접)</h3>
+                        <span class="relation-badge indirect">간접 관계</span>
+                    </div>
+                    <div class="relation-body">
+                        <div class="relation-diagram indirect-diagram">
+                            <div class="entity">교수 (professors)</div>
+                            <div class="arrow">→</div>
+                            <div class="entity">과목 (courses)</div>
+                            <div class="arrow">→</div>
+                            <div class="entity">수강신청내역 (enrollments)</div>
+                            <div class="arrow">→</div>
+                            <div class="entity">학생 (students)</div>
+                        </div>
+                        <p class="relation-desc">
+                            <strong>의미:</strong> 교수와 학생 간에는 직접적인 관계가 없지만, 과목과 수강신청내역을 통해 간접적으로 연결됩니다.<br>
+                            <strong>쿼리 예시:</strong> 특정 교수가 강의하는 과목을 수강하는 모든 학생을 조회할 수 있습니다.
+                        </p>
+                        <div class="example">
+                            <strong>SQL 예시:</strong>
+                            <pre><code>SELECT s.* 
+FROM students s
+JOIN enrollments e ON s.id = e.student_id
+JOIN courses c ON e.course_id = c.id
+WHERE c.professor_id = 'P001';</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3><i class="fas fa-graduation-cap"></i> 데이터베이스 정규화</h3>
+                <p>이 스키마는 다음과 같은 정규화 원칙을 따릅니다:</p>
+                <ul>
+                    <li><strong>제1정규형 (1NF):</strong> 모든 속성이 원자값(atomic value)을 가집니다.</li>
+                    <li><strong>제2정규형 (2NF):</strong> 부분 함수 종속성이 제거되어 있습니다.</li>
+                    <li><strong>제3정규형 (3NF):</strong> 이행 함수 종속성이 제거되어 있습니다.</li>
+                    <li><strong>다대다 관계 해결:</strong> 중간 테이블(enrollments)을 사용하여 학생-과목 간 다대다 관계를 1:N 관계 2개로 분해했습니다.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Database ERD Learning Tool | Created for Educational Purposes</p>
+        </div>
+    </footer>
+
+    <script src="js/erd.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

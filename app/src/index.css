@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-900 text-slate-100 font-sans;
+    font-size: 120%;
+    line-height: 1.6;
+    min-height: 100vh;
+    font-style: normal !important;
+  }
+
+  * {
+    font-style: normal !important;
+  }
+}
+
+.glass {
+  @apply bg-slate-800/80 border border-white/10;
+}
+
+.card {
+  @apply glass rounded-2xl p-6 transition-all duration-300;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full hover:bg-white/30;
+}
